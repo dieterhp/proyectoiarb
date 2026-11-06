@@ -27,6 +27,7 @@ SISTEMA = f"""Eres el asistente de IA de Distribuidora Rio Claro. Responde en es
 Reglas: usa SOLO la informacion de abajo; si no esta, di que no lo sabes y sugiere hablar con una persona.
 Trata igual a clientes de todas las sucursales. No reveles nominas ni costos internos.
 Al final de cada respuesta escribe 'Fuente:' con el documento usado (inventario_unificado.csv, catalogo_unificado.csv, quejas.csv o politica_devoluciones_vigente.md).
+Si la respuesta no usa ningun documento (saludos, preguntas generales), no escribas 'Fuente:'.
 Eres una IA; las decisiones de dinero las aprueba una persona.
 ## INVENTARIO (producto | sucursal | existencia)
 {INVENTARIO}
@@ -85,14 +86,15 @@ def factura():  # funcion de facturas
     tc = campos.get("InvoiceTotal", {})  # campo del total
     total = (tc.get("valueCurrency") or {}).get("amount")  # monto del total
     ct = tc.get("confidence", 0)  # confianza del total
-    confianza = min(cp, cf, cd, ct) if docs else 0  # confianza minima entre campos clave
+    UMBRAL = float(os.environ.get("UMBRAL", "0.7"))  # lee el umbral de confianza desde una variable de entorno
+    confianza = min(cp, cf, ct) if docs else 0  # confianza minima solo de proveedor, folio y total
     estado, motivo = "Pendiente de aprobacion", ""  # estado inicial
-    if not docs or total is None or not folio or confianza < 0.8:  # si faltan datos o hay poca confianza
+    if not docs or total is None or not folio or confianza < UMBRAL:  # si faltan datos o hay poca confianza
         estado, motivo = "REVISION HUMANA", "Confianza baja o datos faltantes: no se inventa el total."  # marca revision
     previas = cargar()  # lee facturas anteriores
     if any(norm(p["proveedor"]) == norm(prov) and norm(p["folio"]) == norm(folio) and p["total"] == total for p in previas if prov and folio):  # compara proveedor, folio y total
         estado, motivo = "DUPLICADA", "Mismo proveedor, folio y total que una factura ya registrada."  # marca duplicada
-    reg = {"archivo": request.files["archivo"].filename, "proveedor": prov, "folio": folio, "fecha": fecha, "total": total, "confianza": round(confianza, 2), "estado": estado, "motivo": motivo}  # arma el registro
+    reg = {"archivo": request.files["archivo"].filename, "proveedor": prov, "folio": folio, "fecha": fecha, "total": total, "confianza": round(confianza, 2), "confianzas": {"proveedor": round(cp, 2), "folio": round(cf, 2), "fecha": round(cd, 2), "total": round(ct, 2)}, "estado": estado, "motivo": motivo}  # arma el registro
     if estado != "DUPLICADA":  # las duplicadas no se guardan
         previas.append(reg)  # agrega a la lista
         guardar(previas)  # guarda la lista
@@ -116,6 +118,8 @@ def aprobar():  # funcion de aprobacion
 def quejas():  # funcion de quejas
     docs = [{"id": q["id"], "language": "es", "text": q["mensaje"]} for q in QUEJAS]  # arma documentos para Language
     r = requests.post(f"{COG}/language/:analyze-text?api-version=2023-04-01", headers={"Ocp-Apim-Subscription-Key": KEY}, json={"kind": "SentimentAnalysis", "analysisInput": {"documents": docs}}, timeout=60)  # llama al servicio
+    if r.status_code != 200:  # si el servicio no respondio con exito
+        return jsonify({"error": r.status_code, "detalle": r.text}), 500  # devuelve el codigo y el texto del error
     sent = {d["id"]: d["sentiment"] for d in r.json().get("results", {}).get("documents", [])}  # mapa id -> sentimiento
     salida = [{**q, "sentimiento": sent.get(q["id"], "n/d")} for q in QUEJAS]  # une quejas con sentimiento
     return jsonify(salida)  # devuelve resultado
