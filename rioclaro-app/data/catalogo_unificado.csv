@@ -1,0 +1,16 @@
+sku,nombre,categoria,unidad,precio_lista_mxn,costo_mxn
+RC-001,Cloro 1 L,Limpieza,pieza,24.5,15.0
+RC-002,Cloro 5 L,Limpieza,garrafa,98.0,63.0
+RC-003,Desengrasante 1 L,Limpieza,pieza,42.0,27.0
+RC-004,Limpiador multiusos pino 1 L,Limpieza,pieza,31.0,19.0
+RC-005,Jabon liquido para manos 1 L,Higiene,pieza,38.0,23.0
+RC-006,Gel antibacterial 500 ml,Higiene,pieza,35.0,21.0
+RC-007,Papel higienico jumbo (12 rollos),Higiene,paquete,145.0,98.0
+RC-008,Toalla interdoblada (caja 20 pqts),Higiene,caja,260.0,180.0
+RC-009,Bolsa negra jumbo 90x120 (10 pzas),Desechables,paquete,52.0,34.0
+RC-010,Trapeador de microfibra,Utensilios,pieza,68.0,44.0
+RC-011,Fibra verde (paquete 10),Utensilios,paquete,55.0,33.0
+RC-012,Detergente en polvo 10 kg,Limpieza,costal,310.0,215.0
+RC-013,Suavizante de telas 5 L,Limpieza,garrafa,120.0,78.0
+RC-014,Aromatizante ambiental 400 ml,Higiene,pieza,40.0,24.0
+RC-015,Guantes de nitrilo (caja 100),Higiene,caja,165.0,110.0

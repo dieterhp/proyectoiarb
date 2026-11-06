@@ -1,0 +1,9 @@
+archivo,proveedor,folio,fecha,total_mxn,nota
+factura_001_quimicos_bajio.pdf,Quimicos del Bajio SA de CV,QBA-10421,2026-10-05,14645.0,limpia
+factura_002_papeles_norte.pdf,Papeles y Derivados del Norte SA,PDN-7733,2026-10-07,13084.8,limpia
+factura_003_plasticos_jalisco.pdf,Plasticos Industriales de Jalisco,PIJ-5521,2026-10-09,4732.8,limpia
+factura_004_aguila.pdf,Distribuciones Aguila SA de CV,DAG-3090,2026-10-12,5614.4,limpia
+factura_005_higiene_total.pdf,Higiene Total Mexico SA de CV,HTM-8812,2026-10-14,12644.0,limpia
+factura_final2.pdf,Quimicos del Bajio SA de CV,QBA-10421,2026-10-05,14645.0,DUPLICADA de factura_001
+foto_whatsapp_factura.jpg,Textiles y Utensilios Centro,TUC-2290,2026-10-16,3445.2,foto inclinada tipo WhatsApp
+factura_borrosa.jpg,Higiene Total Mexico SA de CV,HTM-8901,2026-10-20,5324.4,borrosa: debe ir a revision humana

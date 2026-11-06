@@ -1,0 +1,33 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rio Claro IA</title>
+<style>body{font-family:system-ui;max-width:820px;margin:auto;padding:12px}nav button{padding:10px 14px;margin:2px}#log{border:1px solid #ccc;min-height:260px;padding:8px;overflow:auto}
+.u{color:#0a58ca}.b{color:#222;margin-bottom:8px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:4px;font-size:13px}.tab{display:none}.on{display:block}
+input[type=text]{width:70%;padding:8px}button{padding:8px 12px}.aviso{background:#fff3cd;padding:6px;border-radius:6px;font-size:13px}</style>
+<script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1.40.0/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script></head><body>
+<h2>Distribuidora Rio Claro - Asistente con IA</h2>
+<p class="aviso">Estas hablando con una IA. Cada respuesta indica su fuente. Una persona revisa y aprueba lo relacionado con pagos.</p>
+<nav><button onclick="tab('a')">Asistente</button><button onclick="tab('f')">Facturas</button><button onclick="tab('q')">Quejas</button></nav>
+<div id="a" class="tab on"><div id="log"></div><p><input id="msg" type="text" placeholder="Ej: cuanto cloro de litro hay en Leon?" onkeydown="if(event.key=='Enter')enviar()">
+<button onclick="enviar()">Enviar</button> <button onclick="voz()">🎤 Hablar</button></p></div>
+<div id="f" class="tab"><p>Sube una factura (PDF o foto):</p><input type="file" id="arch"> <button onclick="subir()">Procesar</button>
+<pre id="res"></pre><h3>Facturas registradas</h3><table id="tf"></table></div>
+<div id="q" class="tab"><button onclick="quejas()">Analizar sentimiento</button><table id="tq"></table></div>
+<script>
+let hist=[];const $=i=>document.getElementById(i);
+function tab(t){["a","f","q"].forEach(x=>$(x).className="tab"+(x==t?" on":""));if(t=="f")listar()}
+function pinta(c,t){$("log").innerHTML+=`<div class="${c}"><b>${c=="u"?"Tu":"IA"}:</b> ${t}</div>`;$("log").scrollTop=1e9}
+async function enviar(hablar){const t=$("msg").value.trim();if(!t)return;$("msg").value="";pinta("u",t);hist.push({role:"user",content:t});
+ const r=await(await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mensajes:hist})})).json();
+ hist.push({role:"assistant",content:r.respuesta});pinta("b",r.respuesta.replace(/\n/g,"<br>"));if(hablar)leer(r.respuesta)}
+async function cfg(){const k=await(await fetch("/api/speech-token")).json();const c=SpeechSDK.SpeechConfig.fromAuthorizationToken(k.token,k.region);c.speechRecognitionLanguage="es-MX";c.speechSynthesisVoiceName="es-MX-DaliaNeural";return c}
+async function voz(){const c=await cfg();const rec=new SpeechSDK.SpeechRecognizer(c,SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
+ rec.recognizeOnceAsync(r=>{$("msg").value=r.text;enviar(true)})}
+async function leer(t){const c=await cfg();new SpeechSDK.SpeechSynthesizer(c).speakTextAsync(t.split("Fuente:")[0])}
+async function subir(){const f=$("arch").files[0];if(!f)return;const d=new FormData();d.append("archivo",f);$("res").textContent="Procesando...";
+ const r=await(await fetch("/api/factura",{method:"POST",body:d})).json();$("res").textContent=JSON.stringify(r,null,2);listar()}
+async function listar(){const l=await(await fetch("/api/facturas")).json();
+ $("tf").innerHTML="<tr><th>Proveedor</th><th>Folio</th><th>Total</th><th>Conf.</th><th>Estado</th><th></th></tr>"+l.map(f=>`<tr><td>${f.proveedor}</td><td>${f.folio}</td><td>${f.total}</td><td>${f.confianza}</td><td>${f.estado}</td><td><button onclick="aprobar('${f.folio}')">Aprobar</button></td></tr>`).join("")}
+async function aprobar(folio){await fetch("/api/aprobar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({folio,persona:"Laura (CxP)"})});listar()}
+async function quejas(){const l=await(await fetch("/api/quejas")).json();
+ $("tq").innerHTML="<tr><th>Cliente</th><th>Sucursal</th><th>Mensaje</th><th>Sentimiento</th></tr>"+l.map(q=>`<tr><td>${q.cliente}</td><td>${q.sucursal}</td><td>${q.mensaje}</td><td>${q.sentimiento}</td></tr>`).join("")}
+</script></body></html>

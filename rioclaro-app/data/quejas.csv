@@ -1,0 +1,21 @@
+id,fecha,cliente,sucursal,canal,mensaje
+Q-001,2026-09-02,Hotel Real del Valle,Leon,WhatsApp,Pedido de cloro y desengrasante llego 3 dias tarde.
+Q-002,2026-09-05,Hotel Real del Valle,Leon,Llamada,"Es la segunda vez que pregunto por el pedido retrasado, nadie me da respuesta."
+Q-003,2026-09-09,Hotel Real del Valle,Leon,Correo,Tercer reclamo por el mismo retraso. Estoy considerando cambiar de proveedor.
+Q-004,2026-09-12,Hotel Real del Valle,Leon,WhatsApp,Cuarta vez que reporto el retraso. Nadie me devolvio la llamada.
+Q-005,2026-09-03,Restaurante La Fonda,Zapopan,Llamada,Me cobraron un precio distinto al de la cotizacion en el gel antibacterial.
+Q-006,2026-09-15,Restaurante La Fonda,Zapopan,WhatsApp,"Gracias, ya corrigieron el precio. Buen servicio."
+Q-007,2026-09-07,Escuela Primaria Benito Juarez,Queretaro,Correo,"Faltaron 2 cajas de guantes en la entrega, el remision dice que si iban."
+Q-008,2026-09-18,Escuela Primaria Benito Juarez,Queretaro,Llamada,"Las cajas faltantes llegaron, todo en orden. Muchas gracias."
+Q-009,2026-09-10,Abarrotes Dona Chela,Aguascalientes,WhatsApp,"Quiero devolver 5 garrafas de suavizante, vienen con la tapa danada."
+Q-010,2026-09-11,Abarrotes Dona Chela,Aguascalientes,WhatsApp,Me dijeron que tengo 15 dias para devolver y otro vendedor dijo que 30. Cual es?
+Q-011,2026-09-20,Hotel Plaza Andares,Guadalajara,Correo,"Excelente atencion, el pedido llego un dia antes de lo prometido."
+Q-012,2026-09-22,Hotel Plaza Andares,Guadalajara,Llamada,"La factura salio con un RFC incorrecto, necesito que la reexpidan."
+Q-013,2026-09-25,Restaurante El Fogon,Leon,WhatsApp,El detergente llego mojado y con la bolsa rota.
+Q-014,2026-10-01,Restaurante El Fogon,Leon,Llamada,Siguen sin reponerme el detergente. Estoy muy molesto.
+Q-015,2026-10-03,Tienda Abarrotes Lupita,Zapopan,WhatsApp,Quisiera saber si tienen disponible el cloro de 5 litros.
+Q-016,2026-10-05,Hotel Casa Magna,Queretaro,Correo,El papel higienico jumbo no es la marca que pedi.
+Q-017,2026-10-08,Hotel Casa Magna,Queretaro,Llamada,"Ya me enviaron la marca correcta, pero tardaron una semana."
+Q-018,2026-10-10,Escuela Colegio Americano,Aguascalientes,Correo,Quiero cotizar bolsa negra y trapeadores para el ciclo escolar.
+Q-019,2026-10-14,Hotel Real del Valle,Leon,WhatsApp,Nuevo retraso en el pedido de toalla interdoblada. Ya no se que mas hacer.
+Q-020,2026-10-18,Restaurante La Fonda,Zapopan,Llamada,"Perfecto, el pedido llego completo y a tiempo."
