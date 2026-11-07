@@ -87,7 +87,7 @@ _[Captura: ejemplo de los catálogos originales frente al catálogo unificado]_
 
 El asistente responde solo con la información cargada y cita su fuente. Si no la tiene, lo dice y sugiere hablar con una persona.
 
-![Inventario](img/preginv.png)![Política](img/05-chat-politica.png)
+![Inventario](img/preginv.png)
 ![Pregunta sin información](img/sininfo.png)
 
 
@@ -95,7 +95,7 @@ El asistente responde solo con la información cargada y cita su fuente. Si no l
 
 El flujo es: subir archivo → extracción → verificación de duplicados y confianza → aprobación humana.
 
-![Factura extraída](img/08-factura-extraida.png)
+![Factura extraída](img/subida.png)
 ![Factura duplicada](img/duplicado.png)
 ![Factura borrosa en revisión humana](img/borrosa.png)
 ![Factura aprobada por una persona](img/aprobada.png)
