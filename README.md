@@ -9,7 +9,7 @@
 | Dieter Isaac Haefner Pérez |
 | Mario Jose Santiago Sanchez |
 | Juan Contreras Alvarado |
-| Evelyn Daniela Sanchez Santos_ |
+| Evelyn Daniela Sanchez Santos |
 
 > Todos los datos (clientes, facturas, quejas, precios) son **ficticios** y se generaron para este proyecto.
 
