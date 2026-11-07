@@ -26,7 +26,7 @@ async function leer(t){const c=await cfg();new SpeechSDK.SpeechSynthesizer(c).sp
 async function subir(){const f=$("arch").files[0];if(!f)return;const d=new FormData();d.append("archivo",f);$("res").textContent="Procesando...";
  const r=await(await fetch("/api/factura",{method:"POST",body:d})).json();$("res").textContent=JSON.stringify(r,null,2);listar()}
 async function listar(){const l=await(await fetch("/api/facturas")).json();
- $("tf").innerHTML="<tr><th>Proveedor</th><th>Folio</th><th>Total</th><th>Conf.</th><th>Estado</th><th></th></tr>"+l.map(f=>`<tr><td>${f.proveedor}</td><td>${f.folio}</td><td>${f.total}</td><td>${f.confianza}</td><td>${f.estado}</td><td><button onclick="aprobar('${f.folio}')">Aprobar</button></td></tr>`).join("")}
+ $("tf").innerHTML="<tr><th>Proveedor</th><th>Folio</th><th>Total</th><th>Conf.</th><th>Estado</th><th></th></tr>"+l.map(f=>`<tr><td>${f.proveedor}</td><td>${f.folio}</td><td>${f.total}</td><td>${f.confianza}</td><td>${f.estado}</td><td>${f.folio?`<button onclick="aprobar('${f.folio}')">Aprobar</button>`:""}</td></tr>`).join("")}
 async function aprobar(folio){await fetch("/api/aprobar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({folio,persona:"Laura (CxP)"})});listar()}
 async function quejas(){const l=await(await fetch("/api/quejas")).json();
  $("tq").innerHTML="<tr><th>Cliente</th><th>Sucursal</th><th>Mensaje</th><th>Sentimiento</th></tr>"+l.map(q=>`<tr><td>${q.cliente}</td><td>${q.sucursal}</td><td>${q.mensaje}</td><td>${q.sentimiento}</td></tr>`).join("")}
