@@ -12,7 +12,25 @@ nav button.act{background:#0d6efd;color:#fff;border-color:#0d6efd}
 table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:4px;font-size:13px}.tab{display:none}.on{display:block}
 input[type=text]{width:70%;padding:8px}button{padding:8px 12px}.aviso{background:#fff3cd;padding:6px;border-radius:6px;font-size:13px}
 .est{padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;white-space:nowrap}
-.ok{background:#d1e7dd;color:#0f5132}.rev{background:#fff3cd;color:#664d03}.dup{background:#f8d7da;color:#842029}</style>
+.ok{background:#d1e7dd;color:#0f5132}.rev{background:#fff3cd;color:#664d03}.dup{background:#f8d7da;color:#842029}
+:root{--azul:#0f766e;--fondo:#eef3f9;--tarjeta:#ffffff;--borde:#d9e2ef}
+body{background:linear-gradient(160deg,#e0f7fa 0%,#f4fbfc 55%,#ffffff 100%);font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:#1f2937;min-height:100vh}
+header{background:linear-gradient(135deg,#0f766e,#0e7490)}
+.tab{background:var(--tarjeta);border:1px solid var(--borde);border-radius:12px;padding:14px;box-shadow:0 2px 10px rgba(13,60,145,.08)}
+#log{background:#f8fafd}
+button{border-radius:8px;border:1px solid var(--azul);background:var(--azul);color:#fff;cursor:pointer;transition:background .15s}
+button:hover{background:#0b5ed7}
+nav button{background:#fff;color:var(--azul)}nav button.act{background:var(--azul);color:#fff}
+.ej button{background:#fff;color:var(--azul)}.ej button:hover{background:#e7f0ff}
+input[type=text]{border:1px solid var(--borde);border-radius:8px}
+input[type=text]:focus{outline:2px solid #9ec5fe}
+th{background:#eaf1fb}tr:nth-child(even) td{background:#f8fafd}
+td,th{border-color:var(--borde)}
+.aviso{border:1px solid #ffe69c}
+.tab.on{animation:f .25s}@keyframes f{from{opacity:0}to{opacity:1}}
+.pens{font-style:italic;color:#6c757d}
+.pens::after{content:"...";animation:p 1s infinite}
+@keyframes p{0%{content:"."}33%{content:".."}66%{content:"..."}}</style>
 <script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1.40.0/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script></head><body>
 <h2>Distribuidora Rio Claro - Asistente con IA</h2>
 <p class="aviso">Estas hablando con una IA. Cada respuesta indica su fuente. Una persona revisa y aprueba lo relacionado con pagos.</p>
@@ -28,7 +46,9 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 function tab(t){["a","f","q"].forEach(x=>$(x).className="tab"+(x==t?" on":""));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("act",b.dataset.t==t));if(t=="f")listar()}
 function pinta(c,t){$("log").innerHTML+=`<div class="msg ${c}">${t}</div>`;$("log").scrollTop=1e9}
 async function enviar(hablar){const t=$("msg").value.trim();if(!t)return;$("msg").value="";pinta("u",esc(t));hist.push({role:"user",content:t});
+ pinta("b pens","Pensando");const ult=$("log").lastElementChild;
  const r=await(await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mensajes:hist})})).json();
+ ult.remove();
  hist.push({role:"assistant",content:r.respuesta});pinta("b",r.respuesta.replace(/\n/g,"<br>"));if(hablar)leer(r.respuesta)}
 async function cfg(){const k=await(await fetch("/api/speech-token")).json();const c=SpeechSDK.SpeechConfig.fromAuthorizationToken(k.token,k.region);c.speechRecognitionLanguage="es-MX";c.speechSynthesisVoiceName="es-MX-DaliaNeural";return c}
 async function voz(){const c=await cfg();const rec=new SpeechSDK.SpeechRecognizer(c,SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
