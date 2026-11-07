@@ -1,22 +1,33 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rio Claro IA</title>
-<style>body{font-family:system-ui;max-width:820px;margin:auto;padding:12px}nav button{padding:10px 14px;margin:2px}#log{border:1px solid #ccc;min-height:260px;padding:8px;overflow:auto}
-.u{color:#0a58ca}.b{color:#222;margin-bottom:8px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:4px;font-size:13px}.tab{display:none}.on{display:block}
-input[type=text]{width:70%;padding:8px}button{padding:8px 12px}.aviso{background:#fff3cd;padding:6px;border-radius:6px;font-size:13px}</style>
+<style>body{font-family:system-ui;max-width:820px;margin:auto;padding:12px}nav button{padding:10px 14px;margin:2px}#log{border:1px solid #ccc;min-height:260px;max-height:420px;padding:10px;overflow:auto;display:flex;flex-direction:column;gap:8px;border-radius:8px}
+.msg{max-width:80%;padding:8px 12px;border-radius:14px;line-height:1.4}
+.msg.u{align-self:flex-end;background:#0d6efd;color:#fff;border-bottom-right-radius:4px}
+.msg.b{align-self:flex-start;background:#e9ecef;color:#222;border-bottom-left-radius:4px}
+nav button{border:1px solid #ccc;background:#f8f9fa;border-radius:6px;cursor:pointer}
+nav button.act{background:#0d6efd;color:#fff;border-color:#0d6efd}
+.s{padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600}
+.positive{background:#d1e7dd;color:#0f5132}.negative{background:#f8d7da;color:#842029}
+.neutral{background:#e2e3e5;color:#41464b}.mixed{background:#fff3cd;color:#664d03}
+table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:4px;font-size:13px}.tab{display:none}.on{display:block}
+input[type=text]{width:70%;padding:8px}button{padding:8px 12px}.aviso{background:#fff3cd;padding:6px;border-radius:6px;font-size:13px}
+.est{padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;white-space:nowrap}
+.ok{background:#d1e7dd;color:#0f5132}.rev{background:#fff3cd;color:#664d03}.dup{background:#f8d7da;color:#842029}</style>
 <script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1.40.0/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script></head><body>
 <h2>Distribuidora Rio Claro - Asistente con IA</h2>
 <p class="aviso">Estas hablando con una IA. Cada respuesta indica su fuente. Una persona revisa y aprueba lo relacionado con pagos.</p>
-<nav><button onclick="tab('a')">Asistente</button><button onclick="tab('f')">Facturas</button><button onclick="tab('q')">Quejas</button></nav>
+<nav><button data-t="a" class="act" onclick="tab('a')">Asistente</button><button data-t="f" onclick="tab('f')">Facturas</button><button data-t="q" onclick="tab('q')">Quejas</button></nav>
 <div id="a" class="tab on"><div id="log"></div><p><input id="msg" type="text" placeholder="Ej: cuanto cloro de litro hay en Leon?" onkeydown="if(event.key=='Enter')enviar()">
 <button onclick="enviar()">Enviar</button> <button onclick="voz()">🎤 Hablar</button></p></div>
 <div id="f" class="tab"><p>Sube una factura (PDF o foto):</p><input type="file" id="arch"> <button onclick="subir()">Procesar</button> <button onclick="reset()">Limpiar historial</button>
-<pre id="res"></pre><h3>Facturas registradas</h3><table id="tf"></table></div>
+<div id="res"></div><h3>Facturas registradas</h3><table id="tf"></table></div>
 <div id="q" class="tab"><button onclick="quejas()">Analizar sentimiento</button><table id="tq"></table></div>
 <script>
 let hist=[];const $=i=>document.getElementById(i);
-function tab(t){["a","f","q"].forEach(x=>$(x).className="tab"+(x==t?" on":""));if(t=="f")listar()}
-function pinta(c,t){$("log").innerHTML+=`<div class="${c}"><b>${c=="u"?"Tu":"IA"}:</b> ${t}</div>`;$("log").scrollTop=1e9}
-async function enviar(hablar){const t=$("msg").value.trim();if(!t)return;$("msg").value="";pinta("u",t);hist.push({role:"user",content:t});
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function tab(t){["a","f","q"].forEach(x=>$(x).className="tab"+(x==t?" on":""));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("act",b.dataset.t==t));if(t=="f")listar()}
+function pinta(c,t){$("log").innerHTML+=`<div class="msg ${c}">${t}</div>`;$("log").scrollTop=1e9}
+async function enviar(hablar){const t=$("msg").value.trim();if(!t)return;$("msg").value="";pinta("u",esc(t));hist.push({role:"user",content:t});
  const r=await(await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mensajes:hist})})).json();
  hist.push({role:"assistant",content:r.respuesta});pinta("b",r.respuesta.replace(/\n/g,"<br>"));if(hablar)leer(r.respuesta)}
 async function cfg(){const k=await(await fetch("/api/speech-token")).json();const c=SpeechSDK.SpeechConfig.fromAuthorizationToken(k.token,k.region);c.speechRecognitionLanguage="es-MX";c.speechSynthesisVoiceName="es-MX-DaliaNeural";return c}
@@ -24,12 +35,16 @@ async function voz(){const c=await cfg();const rec=new SpeechSDK.SpeechRecognize
  rec.recognizeOnceAsync(r=>{$("msg").value=r.text;enviar(true)})}
 async function leer(t){const c=await cfg();new SpeechSDK.SpeechSynthesizer(c).speakTextAsync(t.split("Fuente:")[0])}
 async function subir(){const f=$("arch").files[0];if(!f)return;const d=new FormData();d.append("archivo",f);$("res").textContent="Procesando...";
- const r=await(await fetch("/api/factura",{method:"POST",body:d})).json();$("res").textContent=JSON.stringify(r,null,2);listar()}
+ const r=await(await fetch("/api/factura",{method:"POST",body:d})).json();
+ if(r.error){const error=typeof r.error=="string"?r.error:JSON.stringify(r.error);$("res").innerHTML=`<b>Error:</b> ${esc(error)}`}
+ else $("res").innerHTML=`<b>${esc(r.proveedor||"Sin datos")}</b><br>Folio: ${esc(r.folio||"-")} · Total: $${esc(r.total??"-")}<br>Confianza: ${esc(r.confianza??"-")} · <b>${esc(r.estado||"-")}</b><br><i>${esc(r.motivo||"")}</i>`;
+ listar()}
 async function reset(){await fetch("/api/reset-facturas",{method:"POST"});$("res").textContent="";listar()}
 async function listar(){const l=await(await fetch("/api/facturas")).json();
- $("tf").innerHTML="<tr><th>Proveedor</th><th>Folio</th><th>Total</th><th>Conf.</th><th>Estado</th><th></th></tr>"+l.map(f=>`<tr><td>${f.proveedor}</td><td>${f.folio}</td><td>${f.total}</td><td>${f.confianza}</td><td>${f.estado}</td><td>${f.folio?`<button onclick="aprobar('${f.folio}')">Aprobar</button>`:""}</td></tr>`).join("")}
+ $("tf").innerHTML="<tr><th>Proveedor</th><th>Folio</th><th>Total</th><th>Conf.</th><th>Estado</th><th></th></tr>"+l.map(f=>`<tr><td>${f.proveedor}</td><td>${f.folio}</td><td>${f.total}</td><td>${f.confianza}</td><td><span class="est ${f.estado.startsWith("APROB")||f.estado.startsWith("Pend")?"ok":f.estado=="DUPLICADA"?"dup":"rev"}">${f.estado}</span></td><td>${f.folio?`<button onclick="aprobar('${f.folio}')">Aprobar</button>`:""}</td></tr>`).join("")}
 async function aprobar(folio){await fetch("/api/aprobar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({folio,persona:"Laura (CxP)"})});listar()}
+const ET={positive:"Positivo",negative:"Negativo",neutral:"Neutral",mixed:"Mixto"};
 async function quejas(){const r=await fetch("/api/quejas");const l=await r.json();
  if(!r.ok){$("tq").innerHTML="<tr><td>Error: "+JSON.stringify(l)+"</td></tr>";return}
- $("tq").innerHTML="<tr><th>Cliente</th><th>Sucursal</th><th>Mensaje</th><th>Sentimiento</th></tr>"+l.map(q=>`<tr><td>${q.cliente}</td><td>${q.sucursal}</td><td>${q.mensaje}</td><td>${q.sentimiento}</td></tr>`).join("")}
+ $("tq").innerHTML="<tr><th>Cliente</th><th>Sucursal</th><th>Mensaje</th><th>Sentimiento</th></tr>"+l.map(q=>`<tr><td>${q.cliente}</td><td>${q.sucursal}</td><td>${q.mensaje}</td><td><span class="s ${q.sentimiento}">${ET[q.sentimiento]||q.sentimiento}</span></td></tr>`).join("")}
 </script></body></html>
