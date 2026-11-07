@@ -39,7 +39,7 @@ Un prototipo web, al que se entra con una liga, con tres pestañas:
 
 _[Captura: pantalla general de la aplicación]_
 
-![Pantalla general](img/01-general.png)
+![Pantalla general](img/principal.png)
 
 ## 3. Arquitectura y servicios de Azure
 
@@ -66,7 +66,7 @@ Usuario (web / celular)
 
 _[Captura: grupo de recursos en el portal de Azure con los servicios creados]_
 
-![Recursos en Azure](img/02-recursos-azure.png)
+![Recursos en Azure](img/servicios.png)
 
 ## 4. Cómo se ordenaron los datos
 
@@ -79,7 +79,7 @@ Antes de construir se ordenó lo indispensable:
 
 _[Captura: ejemplo de los catálogos originales frente al catálogo unificado]_
 
-![Catálogos](img/03-catalogos.png)
+![Catálogos](img/catalogo.png)
 
 ## 5. Demostración
 
@@ -87,9 +87,8 @@ _[Captura: ejemplo de los catálogos originales frente al catálogo unificado]_
 
 El asistente responde solo con la información cargada y cita su fuente. Si no la tiene, lo dice y sugiere hablar con una persona.
 
-![Inventario](img/04-chat-inventario.png)
-![Política](img/05-chat-politica.png)
-![Pregunta sin información](img/06-chat-sin-informacion.png)
+![Inventario](img/preginv.png)![Política](img/05-chat-politica.png)
+![Pregunta sin información](img/sininfo.png)
 
 
 ### 5.2 Facturas
@@ -97,9 +96,9 @@ El asistente responde solo con la información cargada y cita su fuente. Si no l
 El flujo es: subir archivo → extracción → verificación de duplicados y confianza → aprobación humana.
 
 ![Factura extraída](img/08-factura-extraida.png)
-![Factura duplicada](img/09-factura-duplicada.png)
-![Factura borrosa en revisión humana](img/10-factura-borrosa.png)
-![Factura aprobada por una persona](img/11-factura-aprobada.png)
+![Factura duplicada](img/duplicado.png)
+![Factura borrosa en revisión humana](img/borrosa.png)
+![Factura aprobada por una persona](img/aprobada.png)
 
 **Resultados de las pruebas con las facturas de ejemplo:**
 
@@ -117,7 +116,7 @@ El flujo es: subir archivo → extracción → verificación de duplicados y con
 
 ### 5.4 Quejas
 
-![Quejas con sentimiento](img/12-quejas.png)
+![Quejas con sentimiento](img/quejas.png)
 
 Los reclamos repetidos del Hotel Real del Valle (cuatro por el mismo retraso en septiembre y uno más en octubre) quedan en un solo registro, con su sentimiento, que antes se perdían entre WhatsApp, llamadas y correos.
 
