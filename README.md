@@ -91,11 +91,8 @@ El asistente responde solo con la información cargada y cita su fuente. Si no l
 ![Política](img/05-chat-politica.png)
 ![Pregunta sin información](img/06-chat-sin-informacion.png)
 
-### 5.2 Asistente (voz, desde el celular)
 
-![Voz en celular](img/07-voz-celular.png)
-
-### 5.3 Facturas
+### 5.2 Facturas
 
 El flujo es: subir archivo → extracción → verificación de duplicados y confianza → aprobación humana.
 
