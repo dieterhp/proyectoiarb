@@ -29,6 +29,7 @@ async function reset(){await fetch("/api/reset-facturas",{method:"POST"});$("res
 async function listar(){const l=await(await fetch("/api/facturas")).json();
  $("tf").innerHTML="<tr><th>Proveedor</th><th>Folio</th><th>Total</th><th>Conf.</th><th>Estado</th><th></th></tr>"+l.map(f=>`<tr><td>${f.proveedor}</td><td>${f.folio}</td><td>${f.total}</td><td>${f.confianza}</td><td>${f.estado}</td><td>${f.folio?`<button onclick="aprobar('${f.folio}')">Aprobar</button>`:""}</td></tr>`).join("")}
 async function aprobar(folio){await fetch("/api/aprobar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({folio,persona:"Laura (CxP)"})});listar()}
-async function quejas(){const l=await(await fetch("/api/quejas")).json();
+async function quejas(){const r=await fetch("/api/quejas");const l=await r.json();
+ if(!r.ok){$("tq").innerHTML="<tr><td>Error: "+JSON.stringify(l)+"</td></tr>";return}
  $("tq").innerHTML="<tr><th>Cliente</th><th>Sucursal</th><th>Mensaje</th><th>Sentimiento</th></tr>"+l.map(q=>`<tr><td>${q.cliente}</td><td>${q.sucursal}</td><td>${q.mensaje}</td><td>${q.sentimiento}</td></tr>`).join("")}
 </script></body></html>

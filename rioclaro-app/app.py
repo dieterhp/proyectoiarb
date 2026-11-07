@@ -116,11 +116,14 @@ def aprobar():  # funcion de aprobacion
 
 @app.route("/api/quejas")  # ruta de quejas con sentimiento
 def quejas():  # funcion de quejas
-    docs = [{"id": q["id"], "language": "es", "text": q["mensaje"]} for q in QUEJAS]  # arma documentos para Language
-    r = requests.post(f"{COG}/language/:analyze-text?api-version=2023-04-01", headers={"Ocp-Apim-Subscription-Key": KEY}, json={"kind": "SentimentAnalysis", "analysisInput": {"documents": docs}}, timeout=60)  # llama al servicio
-    if r.status_code != 200:  # si el servicio no respondio con exito
-        return jsonify({"error": r.status_code, "detalle": r.text}), 500  # devuelve el codigo y el texto del error
-    sent = {d["id"]: d["sentiment"] for d in r.json().get("results", {}).get("documents", [])}  # mapa id -> sentimiento
+    sent = {}  # diccionario id -> sentimiento
+    for i in range(0, len(QUEJAS), 5):  # recorre las quejas en lotes de 5
+        lote = [{"id": q["id"], "language": "es", "text": q["mensaje"]} for q in QUEJAS[i:i + 5]]  # arma el lote de documentos
+        r = requests.post(f"{COG}/language/:analyze-text?api-version=2023-04-01", headers={"Ocp-Apim-Subscription-Key": KEY}, json={"kind": "SentimentAnalysis", "analysisInput": {"documents": lote}}, timeout=60)  # llama a Language con el lote
+        if r.status_code != 200:  # si el servicio no respondio con exito
+            return jsonify({"error": r.status_code, "detalle": r.text}), 500  # devuelve el codigo y el texto del error
+        for d in r.json().get("results", {}).get("documents", []):  # recorre los resultados del lote
+            sent[d["id"]] = d["sentiment"]  # guarda el sentimiento por id
     salida = [{**q, "sentimiento": sent.get(q["id"], "n/d")} for q in QUEJAS]  # une quejas con sentimiento
     return jsonify(salida)  # devuelve resultado
 
