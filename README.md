@@ -1,16 +1,15 @@
 # Río Claro IA: de datos dispersos a IA útil
 
 **Proyecto integrador AI-901 · Microsoft Azure AI Fundamentals · Microsoft Foundry**
-**Opción A: caso Distribuidora Río Claro**
+**caso de la Distribuidora Río Claro**
 
 **Prototipo en línea:** https://rioclaro-dts.azurewebsites.net
 
-| Integrante | Rol en el proyecto |
-|---|---|
-| Dieter Isaac Haefner Pérez | _(completar)_ |
-| Mario Jose Santiago Sanchez | _(completar)_ |
-| Juan Contreras Alvarado | _(completar)_ |
-| Evelyn _(confirmar apellidos)_ | _(completar o quitar si no participa)_ |
+| Integrantes
+| Dieter Isaac Haefner Pérez |
+| Mario Jose Santiago Sanchez |
+| Juan Contreras Alvarado |
+| Evelyn Daniela Sanchez Santos_ |
 
 > Todos los datos (clientes, facturas, quejas, precios) son **ficticios** y se generaron para este proyecto.
 
