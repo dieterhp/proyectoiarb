@@ -123,3 +123,14 @@ def quejas():  # funcion de quejas
     sent = {d["id"]: d["sentiment"] for d in r.json().get("results", {}).get("documents", [])}  # mapa id -> sentimiento
     salida = [{**q, "sentimiento": sent.get(q["id"], "n/d")} for q in QUEJAS]  # une quejas con sentimiento
     return jsonify(salida)  # devuelve resultado
+
+@app.route("/api/quejas-debug")  # ruta de diagnostico de Language
+def quejas_debug():  # funcion de diagnostico
+    cuerpo = {"kind": "SentimentAnalysis", "analysisInput": {"documents": [{"id": "1", "language": "es", "text": "El servicio fue excelente, muchas gracias."}]}}  # un documento de prueba
+    r = requests.post(f"{COG}/language/:analyze-text?api-version=2023-04-01", headers={"Ocp-Apim-Subscription-Key": KEY}, json=cuerpo, timeout=60)  # llama a Language
+    return jsonify({"status": r.status_code, "cuerpo": r.text})  # devuelve codigo y texto crudos
+
+@app.route("/api/reset-facturas", methods=["POST"])  # ruta que borra el historial de facturas
+def reset_facturas():  # funcion de reinicio
+    guardar([])  # sobrescribe el archivo con una lista vacia
+    return jsonify([])  # devuelve la lista vacia
